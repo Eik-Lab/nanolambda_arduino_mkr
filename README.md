@@ -14,3 +14,11 @@ All code is licensed under "Apache license 2.0", which means all code can be mod
 The examples should now appear in "File" -> "Examples" -> "NanoLambdaNSP32_FYS203".
 
 ### Wiring setup (COMING!)
+  1. ...
+
+### Compile and run an example (Not complete!)
+
+  1. Choose an example
+  2. Choose correct board. Goto "Tools" -> "Board" and select a board
+  3. Choose correct port. Goto "Tools" -> "Port" and select a port, often named "COMXX(Board name)"
+  4. Press the right arrow in the Arduino IDE (next to the check icon), and it will compile, load the code into the board and run the code.
