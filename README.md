@@ -8,7 +8,6 @@ All code is licensed under "Apache license 2.0", which means all code can be mod
 
 
 ## How to's
-#
 ### Install the library!
 
   1. Press the green "Code" button and download as a zip.
@@ -23,14 +22,14 @@ The examples should now appear in "File" -> "Examples" -> "NanoLambdaNSP32".<br 
   ![](./images/nsp32_pinout.png)
 
 #### Connect the cables from the NSP32m to these pins on Arduino (see image above)
-  1. VCC
-  2. 14 TX
-  3. GND
-  4. NC (Not connected)
-  5. 1
-  6. NC (Not connected)
-  7. 0
-  8. 13 RX
+  1. -> VCC
+  2. -> 14 TX
+  3. -> GND
+  4. -> NC (Not connected)
+  5. -> 1
+  6. -> NC (Not connected)
+  7. -> 0
+  8. -> 13 RX
 
 Nanolambda will light a green diode, if the power is connected correctly.<br />
 See the datasheet for more information!<br /><br />
