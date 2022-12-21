@@ -31,6 +31,12 @@ const int chipSelect = SDCARD_SS_PIN;
 
 using namespace NanoLambdaNSP32;
 
+// ***************** NSP32m model parameters *****************
+
+#define FIRST_WAVE_LEN 600
+#define NUMBER_OF_WAVE_LEN 81
+
+
 /***********************************************************************************
  * modify this section to fit your need                                            *
  ***********************************************************************************/
@@ -72,12 +78,11 @@ void setup()
 
   File dataFile = SD.open(FILENAME, FILE_WRITE);
   String wavestr = "";
-  const int number_of_wave_len = 81; // modify this based on the NSP32 you have (600-1000, 81 values)
   if (dataFile)
   {
-    for(int spectre = 0; spectre < number_of_wave_len; spectre++)
+    for(int wl = 0; wl < NUMBER_OF_WAVE_LEN; wl++)
     {
-      int wavelength = 340 + spectre*5;
+      int wavelength = FIRST_WAVE_LEN + wl*5;
       wavestr += String(wavelength);
       wavestr += ";";
     }
@@ -124,18 +129,17 @@ void loop()
 
     File dataFile = SD.open(FILENAME, FILE_WRITE);
     String spectra = " ";
-    const int number_of_wave_len = 81; // modify this based on the NSP32 you have (600-1000, 81 values)
     if (dataFile)
     {
-      for(int spectre = 0; spectre < number_of_wave_len; spectre++)
+      for(int wl = 0; wl < NUMBER_OF_WAVE_LEN; wl++)
       {
-        int wavelength = 600 + spectre*5;
+        int wavelength = FIRST_WAVE_LEN + wl*5; //modify this based on the NSP32 you have, starts at 600
         Serial.print("Wavelength, spectre: ");
         Serial.print(wavelength);
         Serial.print(", ");
-        Serial.println(infoS.Spectrum[spectre]);
+        Serial.println(infoS.Spectrum[wl]);
 
-        spectra += String(infoS.Spectrum[spectre]);
+        spectra += String(infoS.Spectrum[wl]);
         spectra += "; ";
       }
       dataFile.println(spectra);
