@@ -72,10 +72,10 @@ void setup()
 
   File dataFile = SD.open(FILENAME, FILE_WRITE);
   String wavestr = "";
-  const int number_of_spec = 135;
+  const int number_of_wave_len = 81; // modify this based on the NSP32 you have (600-1000, 81 values)
   if (dataFile)
   {
-    for(int spectre = 0; spectre < number_of_spec; spectre++)
+    for(int spectre = 0; spectre < number_of_wave_len; spectre++)
     {
       int wavelength = 340 + spectre*5;
       wavestr += String(wavelength);
@@ -124,10 +124,10 @@ void loop()
 
     File dataFile = SD.open(FILENAME, FILE_WRITE);
     String spectra = " ";
-    const int number_of_spec = 81;
+    const int number_of_wave_len = 81; // modify this based on the NSP32 you have (600-1000, 81 values)
     if (dataFile)
     {
-      for(int spectre = 0; spectre < number_of_spec; spectre++)
+      for(int spectre = 0; spectre < number_of_wave_len; spectre++)
       {
         int wavelength = 600 + spectre*5;
         Serial.print("Wavelength, spectre: ");
