@@ -38,6 +38,10 @@ using namespace NanoLambdaNSP32;
 	const unsigned int PinRst	= 0;  	// pin Reset
 	const unsigned int PinReady	= 1;  	// pin Ready
 
+  // button  
+  const unsigned int ButtonPin = 6;
+  const unsigned int ButtonVal = 7;
+
 /***********************************************************************************/
 
 ArduinoAdaptor adaptor(PinRst);				// master MCU adaptor
@@ -54,6 +58,11 @@ void setup()
 	// initialize "ready trigger" pin for accepting external interrupt (falling edge trigger)
 	pinMode(PinReady, INPUT_PULLUP);     // use pull-up
 	attachInterrupt(digitalPinToInterrupt(PinReady), PinReadyTriggerISR, FALLING);  // enable interrupt for falling edge
+
+  // button
+  pinMode(ButtonPin, OUTPUT);
+  digitalWrite(ButtonPin, LOW);
+  pinMode(ButtonVal, INPUT_PULLUP);
 	
 	// initialize serial port for "Serial Monitor"
 	Serial.begin(115200);
@@ -85,55 +94,58 @@ void setup()
 
 void loop() 
 {
-  // Wake up
-  nsp32.Wakeup();
-
-  /* Not needed, since we know the wavelengths...
-  // =============== get wavelength ===============
-  nsp32.GetWavelength(0);
-
-  WavelengthInfo infoW;
-  nsp32.ExtractWavelengthInfo(&infoW);	// now we have all wavelength info in infoW, we can use e.g. "infoW.Wavelength" to access the wavelength data array
-  */
-
-  // =============== spectrum acquisition ===============
-  nsp32.AcqSpectrum(0, 32, 3, false);		// integration time = 32; frame avg num = 3; disable AE
-
-  // "AcqSpectrum" command takes longer time to execute, the return packet is not immediately available
-  // when the acquisition is done, a "ready trigger" will fire, and nsp32.GetReturnPacketSize() will be > 0
-  while(nsp32.GetReturnPacketSize() <= 0)
+  if(digitalRead(ButtonVal) == LOW) // change to "if(true)" to remove button functionality
   {
-    // TODO: can go to sleep, and wakeup when "ready trigger" interrupt occurs
-    
-    nsp32.UpdateStatus();	// call UpdateStatus() to check async result
-  }
+    // Wake up
+    nsp32.Wakeup();
 
-  SpectrumInfo infoS;
-  nsp32.ExtractSpectrumInfo(&infoS);		// now we have all spectrum info in infoW, we can use e.g. "infoS.Spectrum" to access the spectrum data array
+    /* Not needed, since we know the wavelengths...
+    // =============== get wavelength ===============
+    nsp32.GetWavelength(0);
 
-  File dataFile = SD.open(FILENAME, FILE_WRITE);
-  String spectra = " ";
-  const int number_of_spec = 135;
-  if (dataFile)
-  {
-    for(int spectre = 0; spectre < number_of_spec; spectre++)
+    WavelengthInfo infoW;
+    nsp32.ExtractWavelengthInfo(&infoW);	// now we have all wavelength info in infoW, we can use e.g. "infoW.Wavelength" to access the wavelength data array
+    */
+
+    // =============== spectrum acquisition ===============
+    nsp32.AcqSpectrum(0, 100, 10, false);		// integration time = 32; frame avg num = 3; disable AE
+
+    // "AcqSpectrum" command takes longer time to execute, the return packet is not immediately available
+    // when the acquisition is done, a "ready trigger" will fire, and nsp32.GetReturnPacketSize() will be > 0
+    while(nsp32.GetReturnPacketSize() <= 0)
     {
-      int wavelength = 340 + spectre*5;
-      Serial.print("Wavelength, spectre: ");
-      Serial.print(wavelength);
-      Serial.print(", ");
-      Serial.println(infoS.Spectrum[spectre]);
-
-      spectra += String(infoS.Spectrum[spectre]);
-      spectra += "; ";
+      // TODO: can go to sleep, and wakeup when "ready trigger" interrupt occurs
+      
+      nsp32.UpdateStatus();	// call UpdateStatus() to check async result
     }
-    dataFile.println(spectra);
-    dataFile.close();
+
+    SpectrumInfo infoS;
+    nsp32.ExtractSpectrumInfo(&infoS);		// now we have all spectrum info in infoW, we can use e.g. "infoS.Spectrum" to access the spectrum data array
+
+    File dataFile = SD.open(FILENAME, FILE_WRITE);
+    String spectra = " ";
+    const int number_of_spec = 81;
+    if (dataFile)
+    {
+      for(int spectre = 0; spectre < number_of_spec; spectre++)
+      {
+        int wavelength = 600 + spectre*5;
+        Serial.print("Wavelength, spectre: ");
+        Serial.print(wavelength);
+        Serial.print(", ");
+        Serial.println(infoS.Spectrum[spectre]);
+
+        spectra += String(infoS.Spectrum[spectre]);
+        spectra += "; ";
+      }
+      dataFile.println(spectra);
+      dataFile.close();
+    }
+
+
+    Serial.println(" ");
+    delay(1500); // added to remove "double click" on button
   }
-
-
-  Serial.println(" ");
-  delay(10000);
 }
 
 void PinReadyTriggerISR()
