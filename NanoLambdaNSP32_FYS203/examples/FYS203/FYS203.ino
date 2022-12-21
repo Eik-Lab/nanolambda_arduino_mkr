@@ -108,7 +108,7 @@ void loop()
     */
 
     // =============== spectrum acquisition ===============
-    nsp32.AcqSpectrum(0, 100, 10, false);		// integration time = 32; frame avg num = 3; disable AE
+    nsp32.AcqSpectrum(0, 100, 10, false);		// integration time = 100; frame avg num = 10; disable AE
 
     // "AcqSpectrum" command takes longer time to execute, the return packet is not immediately available
     // when the acquisition is done, a "ready trigger" will fire, and nsp32.GetReturnPacketSize() will be > 0
@@ -144,7 +144,7 @@ void loop()
 
 
     Serial.println(" ");
-    delay(1500); // added to remove "double click" on button
+    delay(1500); // added to remove "double click" on button. Can be used to sample periodicly when button functionality is turned off
   }
 }
 
