@@ -113,7 +113,7 @@ void loop()
     */
 
     // =============== spectrum acquisition ===============
-    nsp32.AcqSpectrum(0, 50, 5, true);		// integration time = 100; frame avg num = 10; disable AE
+    nsp32.AcqSpectrum(0, 50, 5, false);		// integration time = 100; frame avg num = 10; disable AE
 
     // "AcqSpectrum" command takes longer time to execute, the return packet is not immediately available
     // when the acquisition is done, a "ready trigger" will fire, and nsp32.GetReturnPacketSize() will be > 0
